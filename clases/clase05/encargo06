@@ -1,0 +1,170 @@
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(255);
+  
+//El manifiesto en el que estará basado este lienzo será en una reflexión hacia como una composición de objetos o figuras que al encontrar armonía comiezan a provocar emociones que más que entenderse pueden sentirse. Se desarrolla usando figuras geométricas a un estilo de suprematísmo con una paleta de colores azul, rojo, naranjo y amarillo 
+  
+//Este manifiesto fue extraído de la página web:https://designmanifestos.org/michele-de-lucchi-domus-manifesto/
+  
+//Michele De Lucchi: Manifiesto Domus
+  
+//cita original: "La idea es que, desde que empezamos a concebir objetos, como seres humanos tenemos la predisposición natural a atribuirles todo tipo de significados. Somos el único animal que habita la Tierra capaz de imaginar y construir objetos. Al mismo tiempo, tenemos una inclinación irresistible a seguir creando más, siempre diversos y posiblemente siempre mejores"
+  
+    strokeWeight(4)
+  
+//CIRCUNFERENCIAS
+  
+  noFill(0)
+  stroke(247, 7,7)     //rojo
+  circle(200,200,175)
+  noFill(0) 
+  stroke(7,25,142)    //azul
+  circle(200,200,200)
+  noFill()
+  stroke(247, 103, 7)
+  circle(290,320,155)
+  stroke(7,25,142)
+  noFill()
+  stroke(0)
+  circle(290,320,85)
+  noFill()
+  stroke(247,7,7)
+  circle(380,380,90)
+  noFill()
+  stroke(7,25,142)
+  circle(290,320,65)
+  
+//CUADRADO
+  
+  fill(247,7,7)
+  noStroke()
+  square(25,15,100)
+  fill(255)
+  square(45,35,80)    
+  fill(0)  //verde
+  square(60,50,50)    
+  stroke(7,25,142)   
+  noFill()
+  square(50,40,30)
+  stroke(7,25,142)   
+  noFill()
+  square(35,25,114)
+  
+//LINEAS en desnivel
+  
+  stroke(5,25,142)
+  line(180,20,180,200)
+  line(210,200,210,380)
+  
+  stroke(247, 103, 7)   //naranjo
+  line(160,50,160,180)
+  line(230,230,230,360)
+  
+  stroke(247,7,7)
+  line(140,80,140,180)
+  line(250,230,250,340)
+  
+  stroke(255,232,56)
+  line(120,110,120,180)
+  line(270,230,270,320)
+  
+  stroke(5,25,142)
+  line(100,140,100,180)
+  line(290,230,290,300)
+  
+  stroke(247,103,7)
+  line(80,160,80,180)
+  line(80,265,80,285)
+  line(310,230,310,280)
+  
+//LINEAS horizontal
+  stroke(255,232,54)
+  line(50,220,180,220)
+  line(220,180,350,180)
+  stroke(0)
+  line(195,40,220,40)
+  line(230,30,255,30)
+  line(265,40,290,40)
+  line(300,30,325,30)
+  line(335,40,360,40)
+  
+//LINEAS lados
+  
+  stroke(255, 232, 56)    //amarillo
+  line(15,15,15,385)
+  stroke(247, 7,7)    //rojo
+  line(27,120,27,200)
+  line(27,210,27,290)
+  line(27,300,27,380)
+  stroke(247, 103, 7)    //naranjo
+  line(385,80,385,160)
+  line(385,250,385,330)
+  stroke(0)
+  line(40,180,40,250)
+  line(40,360,40,290)
+  
+//CIRCULOS
+ 
+  noStroke(0)
+  fill(7, 25, 142)//azul
+  circle(200,200,70)
+  noStroke()
+  fill(247,7,7)//rojo
+  circle(70,220,20)
+  circle(330,180,20)
+  noStroke(0)
+  fill(7,25,142)//azul
+  circle(385,208,8)
+  noStroke(0)
+  fill(255, 232, 56)//amarillo
+  circle(385,230,5)
+  noStroke(0)
+  fill(255, 232, 56)
+  circle(385,185,5)
+  noStroke(0)
+  fill(7,25,142)
+  circle(385,40,20)
+  noStroke(0)
+  fill(7,25,142)
+  circle(385,380,20)
+  noStroke()
+  fill(255,232,5)
+  circle(43,160,20)
+  noStroke()
+  fill(255,232,5)
+  circle(43,270,20)
+  
+//TRIANGULO
+  
+  fill(0)
+  triangle(200, 200, 110, 260, 45, 380)
+  triangle(370,270,310,200,370,200)
+  fill(255, 232, 56)
+  triangle(100,390,170,390,180,270)
+  
+//TEXTO
+  
+  fill(7, 25, 142)
+  textStyle("italic");
+  text("Reflexionar sobre los objetos y",193,70)
+  text("sus significados es un desafio",200,85)
+  text("que nos permite ver",253,100)
+  text(" el mundo desde",270,115)
+  text("una nueva",303,130)
+  text("perspectiva.",298,145)
+  
+//RECTANGULOS
+  
+  fill(247, 103, 7)
+  rect(75,370,110,10)
+  rect(95,350,90,10)
+  rect(115,330,70,10)
+  rect(135,310,50,10)
+  rect(155,290,30,10)
+}
+function mousePressed(){
+  saveCanvas('solemne01-berchenko-alicia' , 'png')
+}
