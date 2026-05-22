@@ -71,3 +71,91 @@ movedX * 0.1 hace que el mouse influya en el movimiento.
 this.x += this.vx mueve la partícula horizontalmente.
 this.y += this.vy la mueve verticalmente.
 this.alpha -= 4 reduce su opacidad para que desaparezca lentamente.
+
+DECLARACIÓN USO DE IA
+Utilicé Chat gpt gratuito, para preguntarle como podria hacer lo de los puntitos rojos y que desaparecieran 
+promt: "como puedo hacer que en el programa p5.js se forme un movimiento y desaparición de particulas con tonos 
+rojos a partir del centro del lienzo"
+
+esto fue lo que recibí
+
+let particles = [];
+
+function setup() {
+createCanvas(windowWidth, windowHeight);
+background(0);
+}
+
+function draw() {
+
+// fondo negro
+background(0);
+
+// crear partículas constantemente
+for(let i = 0; i < 3; i++){
+particles.push(new Particle());
+}
+
+// actualizar y mostrar partículas
+for(let i = particles.length - 1; i >= 0; i--){
+
+particles[i].update();
+particles[i].display();
+
+// eliminar partículas invisibles
+if(particles[i].alpha <= 0){
+particles.splice(i,1);
+}
+}
+}
+
+
+
+class Particle {
+
+constructor(){
+
+// nacen desde el centro
+this.x = width/2;
+this.y = height/2;
+
+// movimiento aleatorio
+this.vx = random(-3,3);
+this.vy = random(-4,-1);
+
+// tamaño aleatorio
+this.size = random(4,15);
+
+// transparencia inicial
+this.alpha = 255;
+
+// colores rojizos
+this.r = random(180,255);
+this.g = random(20,80);
+this.b = random(20,50);
+}
+
+update(){
+
+// movimiento
+this.x += this.vx;
+this.y += this.vy;
+
+// desaparecen lentamente
+this.alpha -= 4;
+
+// se hacen más pequeñas
+this.size *= 0.97;
+}
+
+display(){
+
+noStroke();
+
+// color + transparencia
+fill(this.r, this.g, this.b, this.alpha);
+
+// dibujar partícula
+ellipse(this.x, this.y, this.size);
+}
+}
