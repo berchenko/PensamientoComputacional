@@ -1,5 +1,7 @@
 Alicia Berchenko / berchenkoo 
 
+![imagen album](./img/los-tres.jpeg)
+
 NOMBRE DEL ÁLBUM : La espada y la pared
 AÑO DEL ÁLBUM: 1995
 ARTISTA: Los tres
