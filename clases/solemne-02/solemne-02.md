@@ -1,4 +1,4 @@
-Alicia Berchenko / berchenkoo 
+Alicia Berchenko / berchenko
 
 ![imagen album](./img/los-tres.jpeg)
 
