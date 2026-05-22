@@ -1,1 +1,91 @@
+#Nombre del álbum:
+La espada y la pared
+#Año del álbum: 
+1995
+#Artista:
+Los tres
+#Tracklist
+1. Déjate caer
+2. Hojas de té
+3. La espada y la pared
+4. Dos en uno
+5. Tírate
+6. Te desheredo
+7. Partir de cero
+8. Moizefala
+9. V & V
+10. Me rompió el corazón
+11. La espada
+12. Tu cariño se me va
+13. All Tomorrow's Parties
+
+#Aspecto del álbum a desarrollar (premisa)
+La propuesta busca reinterpretar la atmósfera del álbum La espada & la pared de Los Tres a través de una imagen en movimiento inspirada en su estética melancólica, nocturna y analógica.Se tomó como referencia
+la sensación de bar nocturno y bohemia chilena, las luces cálidas y oscuras, el contraste entre violencia y romanticismo presente en el nombre del álbum, la textura VHS de los videoclips noventeros, la idea de una espada suspendida como símbolo dramático y emocional.
+
+#Distancia entre premisa y resultado
+Aunque el resultado logra transmitir una atmósfera oscura y emocional cercana al álbum, hubo varias ideas que no se consiguieron completamente.
+
+#Cosas no conseguidas
+No conseguí que la espada hiciera una rotación continua de 360° siguiendo el mouse; el movimiento todavía rebota y cambia de dirección.
+Quería que la textura VHS tuviera un efecto aún más parecido a una televisión antigua real, con deformaciones y glitches más complejos.
+
+#Descubrimientos al trabajar
+Aprendí cómo crear un efecto FLASH usando transparencia y disminuyendo gradualmente la opacidad.
+Descubrí cómo generar partículas aleatorias y hacer que desaparezcan lentamente.
+Entendí cómo usar random() para crear ruido visual tipo VHS.
+Aprendí a detectar interacción real con el mouse usando movedX y movedY.
+
+#Explicacion del codigo
+stroke(random(180,255), random(20,70));
+
+point(
+random(width),
+random(height)
+);
+}
+
+Este bloque crea el ruido visual tipo VHS.
+
+El for repite el código 1200 veces para dibujar muchos puntos aleatorios en pantalla.
+
+i++ significa que el contador aumenta de uno en uno.
+random(width) y random(height) generan posiciones aleatorias.
+stroke() define el color y transparencia de cada punto.
+El resultado es una textura granulada similar a una cinta analógica o televisión antigua.
+
+let interacting = movedX !== 0 || movedY !== 0;
+
+Este bloque detecta si el usuario realmente movió el mouse.
+
+movedX mide movimiento horizontal.
+movedY mide movimiento vertical.
+!== 0 significa “distinto de cero”.
+|| significa “o”.
+Entonces la variable interacting se activa cuando el mouse se mueve en cualquier dirección.
+
+Gracias a esto, las partículas y luces solo aparecen cuando existe interacción real.
+
+this.vx = random(-2,2) + movedX * 0.1;
+this.vy = random(-3,-1);
+
+this.x += this.vx;
+this.y += this.vy;
+
+this.alpha -= 4;
+Este bloque controla el movimiento y desaparición de las partículas.
+
+vx es la velocidad horizontal.
+vy es la velocidad vertical.
+random(-2,2) hace que cada partícula se mueva diferente.
+movedX * 0.1 hace que el mouse influya en el movimiento.
+Luego:
+
+this.x += this.vx mueve la partícula horizontalmente.
+this.y += this.vy la mueve verticalmente.
+Finalmente:
+
+this.alpha -= 4 reduce su opacidad para que desaparezca lentamente.
+Esto genera un efecto de humo o polvo flotando alrededor de la espada.
+
 
