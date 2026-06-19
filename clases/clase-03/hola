@@ -1,0 +1,865 @@
+// escena 1 
+//alicia camina hacia el centro de la pantalla 
+
+//escena 2 
+//al llegar al centro de la pantallacomienza a caer por un hoyo "magico" lleno de colores, tazas flotando y tonos morados y azules
+
+//escena 3
+//al llegar "abajo" aparece un texto de hacer click y que presionarlo aparece el gato de la pelicula en lugares random de la pantalla 
+
+//PENDIENTE: hacer que alicia "camine" con dos imagenes y cambiar la imagen del gato
+
+
+
+
+// =====================================================
+// ALICIA EN EL PAÍS DE LAS MARAVILLAS
+// Versión inspirada en la referencia enviada
+//
+// Scroll:
+// - Alicia camina
+// - El suelo se abre
+// - Alicia cae por un túnel psicodélico azul-violeta
+//
+// Extras:
+// - Tazas flotando
+// - Partículas mágicas
+// - Alicia más detallada
+// - Click al final -> aparece el Gato de Cheshire
+// =====================================================
+
+
+// =====================================================
+// VARIABLES GLOBALES
+// =====================================================
+
+let scrollProgress = 0;
+
+let aliceX;
+let aliceY;
+
+let cheshire = null;
+
+let particles = [];
+let cups = [];
+
+const STATE_WALK = 0;
+const STATE_FALL = 1;
+const STATE_BOTTOM = 2;
+
+let state = STATE_WALK;
+
+
+// =====================================================
+// SETUP
+// =====================================================
+let alicia1;
+
+// Load the image.
+function preload() {
+  alicia1 = loadImage('./img/alicia.jpeg');
+}
+
+function setup() {
+
+  createCanvas(windowWidth, windowHeight);
+// Draw the image.
+ 
+
+  aliceX = width * 0.15;
+  aliceY = height * 0.66 - 80;
+
+  // Partículas mágicas
+
+  for (let i = 0; i < 220; i++) {
+
+    particles.push({
+      x: random(width),
+      y: random(height + 200, height + 2300),
+      size: random(2, 8),
+      speed: random(0.2, 1),
+      phase: random(TWO_PI)
+    });
+  }
+
+  // Tazas flotando
+
+  for (let i = 0; i < 28; i++) {
+
+    cups.push({
+
+      x: random(width * 0.2, width * 0.8),
+
+      y: random(height + 300, height + 2200),
+
+      angle: random(TWO_PI),
+
+      rotSpeed: random(-0.02, 0.02),
+
+      scale: random(0.7, 1.6)
+
+    });
+  }
+}
+
+
+// =====================================================
+// DRAW
+// =====================================================
+
+function draw() {
+
+  background(0);
+
+  //----------------------------------------------------
+  // CÁMARA
+  //----------------------------------------------------
+
+  let cameraY = 0;
+
+  if (scrollProgress > 500) {
+
+    cameraY = map(
+      scrollProgress,
+      500,
+      1500,
+      0,
+      1200,
+      true
+    );
+  }
+
+  push();
+
+  translate(0, -cameraY);
+
+  drawWorld();
+
+  pop();
+
+  //----------------------------------------------------
+  // TEXTO FINAL
+  //----------------------------------------------------
+
+  if (state === STATE_BOTTOM) {
+
+    let glow =
+      200 + sin(frameCount * 0.08) * 55;
+
+    fill(glow);
+
+    textAlign(CENTER, CENTER);
+
+    textSize(48);
+
+    text("CLICK", width / 2, height * 0.2);
+  }
+   image(alicia1, 0, 0);
+}
+
+
+// =====================================================
+// MUNDO
+// =====================================================
+
+function drawWorld() {
+
+  let skyHeight = height * 0.66;
+
+  let groundY = skyHeight;
+
+  //----------------------------------------------------
+  // CIELO
+  //----------------------------------------------------
+
+  let darkness =
+    map(
+      scrollProgress,
+      300,
+      1200,
+      0,
+      220,
+      true
+    );
+
+  noStroke();
+
+  fill(
+    140 - darkness * 0.5,
+    200 - darkness * 0.7,
+    255 - darkness
+  );
+
+  rect(0, 0, width, skyHeight);
+
+  //----------------------------------------------------
+  // APERTURA DEL AGUJERO
+  //----------------------------------------------------
+
+  let holeOpen =
+    constrain(
+      map(
+        scrollProgress,
+        450,
+        650,
+        0,
+        280
+      ),
+      0,
+      280
+    );
+
+  //----------------------------------------------------
+  // SUELO
+  //----------------------------------------------------
+
+  fill(90, 170, 90);
+
+  rect(
+    0,
+    groundY,
+    width / 2 - holeOpen / 2,
+    height
+  );
+
+  rect(
+    width / 2 + holeOpen / 2,
+    groundY,
+    width,
+    height
+  );
+
+  //----------------------------------------------------
+  // TÚNEL
+  //----------------------------------------------------
+
+  let lowerTop = height + 250;
+
+  drawWonderTunnel(lowerTop);
+
+  drawTunnelWalls(lowerTop);
+
+  //----------------------------------------------------
+  // PARTÍCULAS
+  //----------------------------------------------------
+
+  drawParticles();
+
+  //----------------------------------------------------
+  // TAZAS
+  //----------------------------------------------------
+
+  drawFlyingCups();
+
+  //----------------------------------------------------
+  // SUELO INFERIOR
+  //----------------------------------------------------
+
+  fill(40, 30, 90);
+
+  rect(
+    0,
+    lowerTop + 650,
+    width,
+    300
+  );
+
+  //----------------------------------------------------
+  // MOVIMIENTO DE ALICIA
+  //----------------------------------------------------
+
+  if (scrollProgress < 500) {
+
+    state = STATE_WALK;
+
+    aliceX =
+      map(
+        scrollProgress,
+        0,
+        500,
+        width * 0.15,
+        width * 0.5
+      );
+
+    aliceY = groundY - 90;
+
+  } else {
+
+    state = STATE_FALL;
+
+    aliceX = width * 0.5;
+
+    aliceY =
+      map(
+        scrollProgress,
+        500,
+        1500,
+        groundY - 90,
+        lowerTop + 580,
+        true
+      );
+
+    if (scrollProgress >= 1450) {
+
+      state = STATE_BOTTOM;
+    }
+  }
+
+  //----------------------------------------------------
+  // FOCO MÁGICO
+  //----------------------------------------------------
+
+  if (scrollProgress > 650) {
+
+    blendMode(ADD);
+
+    for (let r = 550; r > 0; r -= 12) {
+
+      let alpha =
+        map(
+          r,
+          550,
+          0,
+          0,
+          14
+        );
+
+      fill(
+        180,
+        150,
+        255,
+        alpha
+      );
+
+      ellipse(
+        aliceX,
+        aliceY,
+        r,
+        r * 1.6
+      );
+    }
+
+    blendMode(BLEND);
+  }
+
+  //----------------------------------------------------
+  // ALICIA
+  //----------------------------------------------------
+
+  drawAlice(aliceX, aliceY);
+
+  //----------------------------------------------------
+  // GATO
+  //----------------------------------------------------
+
+  if (cheshire) {
+
+    drawCheshire(
+      cheshire.x,
+      cheshire.y
+    );
+  }
+}
+
+
+// =====================================================
+// TÚNEL PSICODÉLICO
+// =====================================================
+
+function drawWonderTunnel(topY) {
+
+  push();
+
+  translate(
+    width / 2,
+    topY + 900
+  );
+
+  noStroke();
+
+  for (
+    let r = 1800;
+    r > 0;
+    r -= 90
+  ) {
+
+    if ((r / 90) % 2 === 0) {
+
+      fill(35, 25, 255);
+
+    } else {
+
+      fill(5, 5, 70);
+    }
+
+    ellipse(
+      0,
+      0,
+      r * 1.2,
+      r
+    );
+  }
+
+  pop();
+}
+
+
+// =====================================================
+// PAREDES DEL TÚNEL
+// =====================================================
+
+function drawTunnelWalls(topY) {
+
+  fill(85, 70, 180);
+
+  beginShape();
+
+  vertex(0, topY);
+
+  for (
+    let y = 0;
+    y < 1800;
+    y += 50
+  ) {
+
+    let offset =
+      sin(
+        y * 0.02 +
+        frameCount * 0.01
+      ) * 30;
+
+    vertex(
+      width * 0.18 + offset,
+      topY + y
+    );
+  }
+
+  vertex(0, topY + 1800);
+
+  endShape(CLOSE);
+
+  beginShape();
+
+  vertex(width, topY);
+
+  for (
+    let y = 0;
+    y < 1800;
+    y += 50
+  ) {
+
+    let offset =
+      sin(
+        y * 0.02 +
+        5 +
+        frameCount * 0.01
+      ) * 30;
+
+    vertex(
+      width -
+      width * 0.18 +
+      offset,
+      topY + y
+    );
+  }
+
+  vertex(width, topY + 1800);
+
+  endShape(CLOSE);
+}
+
+
+// =====================================================
+// TAZAS VOLADORAS
+// =====================================================
+
+function drawFlyingCups() {
+
+  for (let c of cups) {
+
+    push();
+
+    translate(c.x, c.y);
+
+    rotate(
+      frameCount *
+      c.rotSpeed +
+      c.angle
+    );
+
+    scale(c.scale);
+
+    fill(255, 245, 220);
+
+    rect(
+      -15,
+      -10,
+      30,
+      20,
+      4
+    );
+
+    noFill();
+
+    stroke(255);
+
+    ellipse(
+      15,
+      0,
+      12,
+      12
+    );
+
+    noStroke();
+
+    fill(
+      255,
+      120,
+      180
+    );
+
+    rect(
+      -15,
+      -10,
+      30,
+      4
+    );
+
+    fill(255);
+
+    ellipse(
+      0,
+      -10,
+      24,
+      5
+    );
+
+    pop();
+  }
+}
+
+
+// =====================================================
+// ALICIA
+// =====================================================
+
+function drawAlice(x, y) {
+
+  push();
+
+  translate(x, y);
+
+  if (state === STATE_FALL) {
+
+    rotate(-0.35);
+  }
+
+  // cabello
+
+  fill(245, 220, 90);
+
+  ellipse(
+    -2,
+    -30,
+    42,
+    60
+  );
+
+  // cabeza
+
+  fill(255, 225, 200);
+
+  ellipse(
+    0,
+    -25,
+    30,
+    36
+  );
+
+  // ojos
+
+  fill(0);
+
+  circle(-5, -28, 2);
+
+  circle(5, -28, 2);
+
+  // vestido
+
+  fill(70, 150, 255);
+
+  beginShape();
+
+  vertex(-18, 0);
+  vertex(18, 0);
+  vertex(40, 70);
+  vertex(-40, 70);
+
+  endShape(CLOSE);
+
+  // delantal
+
+  fill(255);
+
+  beginShape();
+
+  vertex(-15, 5);
+  vertex(15, 5);
+  vertex(25, 60);
+  vertex(-25, 60);
+
+  endShape(CLOSE);
+
+  // brazos
+
+  stroke(255, 225, 200);
+
+  strokeWeight(4);
+
+  line(-20, 10, -50, 0);
+
+  line(20, 10, 40, -20);
+
+  // piernas
+
+  line(-10, 70, -30, 100);
+
+  line(10, 70, 45, 80);
+
+  noStroke();
+
+  // zapatos
+
+  fill(20);
+
+  ellipse(-30, 100, 12, 7);
+
+  ellipse(45, 80, 12, 7);
+
+  pop();
+}
+
+
+// =====================================================
+// GATO DE CHESHIRE
+// =====================================================
+
+function drawCheshire(x, y) {
+
+  push();
+
+  translate(x, y);
+
+  // cuerpo
+
+  fill(130, 60, 255);
+
+  ellipse(
+    0,
+    25,
+    70,
+    40
+  );
+
+  // rayas
+
+  fill(70, 180, 255);
+
+  rect(-22, 5, 8, 40);
+  rect(-5, 5, 8, 40);
+  rect(12, 5, 8, 40);
+
+  // cabeza
+
+  fill(130, 60, 255);
+
+  ellipse(
+    0,
+    -25,
+    90,
+    70
+  );
+
+  // rayas cabeza
+
+  fill(70, 180, 255);
+
+  rect(-28, -55, 10, 50);
+  rect(-5, -60, 10, 60);
+  rect(18, -55, 10, 50);
+
+  // orejas
+
+  triangle(
+    -30, -40,
+    -10, -80,
+    0, -40
+  );
+
+  triangle(
+    30, -40,
+    10, -80,
+    0, -40
+  );
+
+  // ojos
+
+  fill(255, 255, 100);
+
+  ellipse(-20, -25, 16, 24);
+  ellipse(20, -25, 16, 24);
+
+  fill(0);
+
+  ellipse(-20, -25, 4, 14);
+  ellipse(20, -25, 4, 14);
+
+  // sonrisa
+
+  noFill();
+
+  stroke(255);
+
+  strokeWeight(4);
+
+  arc(
+    0,
+    0,
+    75,
+    40,
+    0.1,
+    PI - 0.1
+  );
+
+  for (
+    let i = -28;
+    i <= 28;
+    i += 6
+  ) {
+
+    line(i, 12, i, 0);
+  }
+
+  pop();
+}
+
+
+// =====================================================
+// PARTÍCULAS MÁGICAS
+// =====================================================
+
+function drawParticles() {
+
+  noStroke();
+
+  for (let p of particles) {
+
+    p.y -= p.speed;
+
+    p.x +=
+      sin(
+        frameCount * 0.01 +
+        p.phase
+      ) * 0.5;
+
+    if (p.y < height + 150) {
+
+      p.y =
+        height +
+        random(
+          1500,
+          2200
+        );
+
+      p.x = random(width);
+    }
+
+    let mix =
+      map(
+        sin(
+          frameCount * 0.04 +
+          p.phase
+        ),
+        -1,
+        1,
+        0,
+        1
+      );
+
+    let c =
+      lerpColor(
+        color(80, 220, 255),
+        color(190, 70, 255),
+        mix
+      );
+
+    fill(
+      red(c),
+      green(c),
+      blue(c),
+      200
+    );
+
+    circle(
+      p.x,
+      p.y,
+      p.size
+    );
+  }
+}
+
+
+// =====================================================
+// SCROLL
+// =====================================================
+
+function mouseWheel(event) {
+
+  scrollProgress += event.delta * 0.5;
+
+  scrollProgress =
+    constrain(
+      scrollProgress,
+      0,
+      1600
+    );
+
+  return false;
+}
+
+
+// =====================================================
+// CLICK
+// =====================================================
+
+function mousePressed() {
+
+  if (state === STATE_BOTTOM) {
+
+    let lowerTop =
+      height + 250;
+
+    cheshire = {
+
+      x: random(
+        width * 0.25,
+        width * 0.75
+      ),
+
+      y: lowerTop + 620
+    };
+  }
+}
+
+
+// =====================================================
+// RESIZE
+// =====================================================
+
+function windowResized() {
+
+  resizeCanvas(
+    windowWidth,
+    windowHeight
+  );
+}
